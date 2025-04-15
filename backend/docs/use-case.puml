@@ -1,0 +1,28 @@
+@startuml
+
+actor User as u
+
+rectangle "Task Manager Tool" {
+  usecase "Login" as UC1
+  usecase "Home" as UC2
+  usecase "TaskManager" as UC3
+  usecase "Manage tasks" as UC3.1
+
+  usecase "Create Task" as UC3.1.1
+  usecase "Read Task" as UC3.1.2
+  usecase "Update Task" as UC3.1.3
+  usecase "Delete Task" as UC3.1.4
+  usecase "Delete Task" as UC3.1.4
+}
+
+u --> UC1: use
+u --> UC2: use
+u --> UC3: use
+
+UC3 --> UC3.1: include
+UC3.1 ..> UC3.1.1: extend
+UC3.1 ..> UC3.1.2: extend
+UC3.1 ..> UC3.1.3: extend
+UC3.1 ..> UC3.1.4: extend
+
+@enduml

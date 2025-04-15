@@ -1,0 +1,57 @@
+# curl -X POST http://localhost:8080/api/tasks -H "Content-Type: application/json" -d '{"name": "Design Database Schema", "description": "Design and model the database schema for the new project.", "finished": "2025-04-15T21:32:13.813+00:00", "created": "2025-04-15T21:32:13.813+00:00"}'
+### Create a task
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "name": "Design Database Schema 1 ",
+  "description": "Design and model the database schema for the new project.",
+  "finished": "2025-04-15T21:32:13.813+00:00",
+  "created": "2025-04-15T21:32:13.813+00:00"
+}
+
+### Create a task not finished
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "name": "Design Database Schema 2",
+  "description": "Design and model the database schema for the new project.",
+  "finished": "",
+  "created": "2025-04-15T21:32:13.813+00:00"
+}
+
+### Create a task only with name and description
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "name": "Design Database Schema 3",
+  "description": "Design and model the database schema for the new project."
+}
+
+### Get all tasks
+GET http://localhost:8080/api/tasks
+
+### Get a task
+@id=1
+GET http://localhost:8080/api/tasks/{{id}}
+
+### Update existing task
+PUT http://localhost:8080/api/tasks/{{id}}
+Content-Type: application/json
+
+{
+  "id": {{id}},
+  "name": "Updated - Design Database Schema",
+  "description": "Update - Design and model the database schema for the new project.",
+  "finished": "",
+  "created": "2025-04-15T21:32:13.813+00:00"
+}
+
+### Delete a task
+DELETE http://localhost:8080/api/tasks/{{id}}
+Content-Type: application/json
+
+### Generate task sample data
+POST http://localhost:8080/api/tasks/add-sample-data

@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 public class TaskDto {
 
     @JsonProperty
+    private long id;
+
+    @JsonProperty
     private String name;
 
     @JsonProperty
@@ -18,8 +21,24 @@ public class TaskDto {
     @JsonProperty
     private ZonedDateTime created;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ZonedDateTime getCreated() {
+        return created;
     }
 
     public void setDescription(String description) {
@@ -38,7 +57,7 @@ public class TaskDto {
         this.finished = finished;
     }
 
-    public Object getFinished() {
+    public ZonedDateTime getFinished() {
         return finished;
     }
 }

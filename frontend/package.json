@@ -4,6 +4,7 @@
   "private": true,
   "author": "Dominik Srednicki <dominik.jan.srednicki@sap.com>",
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/react": "^19.0.11",
@@ -13,7 +14,9 @@
     "@ui5/webcomponents-fiori": "^2.8.0",
     "@ui5/webcomponents-icons": "^2.8.0",
     "ajv": "^8.17.1",
+    "ajv-errors": "^3.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.0",
     "react-router-dom": "^7.3.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",

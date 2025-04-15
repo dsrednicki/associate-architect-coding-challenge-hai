@@ -25,6 +25,8 @@ demonstrate the viability of the chosen tools and methodology.
 By focusing on this PoC, we can prove that our chosen frameworks (Spring Boot and React) and design
 approach (modular architecture) are viable for future expansions.
 
+![use-case.png](backend/docs/use-case.png)
+
 <TBE> ... </TBE>
 
 ## 2️⃣ Architectural Decisions
@@ -46,10 +48,7 @@ approach (modular architecture) are viable for future expansions.
 2. Authentication
    - For now, we use session-based or very simple credentials. We will revisit if we need
      token-based OAuth2 for scaling.
-3. Payment Models 
-   - Current MVP scope excludes payment. We leave placeholders in case the product transitions to
-     a paid service.
-4. Collaboration
+3. Collaboration
    - We know tasks might eventually be shared by multiple users, but for now we only associate
      tasks with a single user. 
    - The design can be extended to support a “shared tasks” entity or a many-to-many relationship
@@ -58,6 +57,14 @@ approach (modular architecture) are viable for future expansions.
 <TBE> ... </TBE>
 
 ## 3️⃣ System Design
+
+### Building Block View
+
+![building-block-full-system.png](backend/docs/building-block-full-system.png)
+
+### Runtime View
+![sequence-task-management.png](backend/docs/sequence-task-management.png)
+
 ### Backend Architecture
 We have a Spring Boot application divided into the following 3-layers:
 - REST Controllers (expose endpoints for tasks)
@@ -74,9 +81,15 @@ for the authentication, database, etc.
 We use React and TypeScript for a modular, component-based approach:
 
 - "Login" Component:
-  - minimal functionality for username/password submission
+    - minimal functionality for username/password submission
+- "Home" Component:
+  - displays all user's available tasks 
 - "Task Manager" Component:
-  - fetches the user’s tasks and displays them in a UI5-based table.
+  - contains the CRUD-Operation on tasks
+    - fetch the user's tasks and display them
+    - create a new task and display it
+    - edit an existing task and display it
+    - delete existing task and display new task list
 - Use of UI5 Web Components
 
 <TBE> ... </TBE>
@@ -88,6 +101,8 @@ We use React and TypeScript for a modular, component-based approach:
    - We use DTOs for request/response isolation
 3. Entities (Data Access Objects)
    - We use DAOs for persistent of entities into the database
+4. Modularized components
+   -  Modularize components, which can be re-used
 
 <TBE> ... </TBE>
 
@@ -96,16 +111,15 @@ We use React and TypeScript for a modular, component-based approach:
 - <TBE> ... </TBE>
 
 ## 6️⃣ Security Considerations
-- Basic user/password system with session-based authentication.
-- Passwords stored in the database are hashed (BCrypt or similar).
 - <TBE> ... </TBE>
 
 ## 7️⃣ Future Improvements
+- Basic user/password system with session-based authentication.
+- Passwords stored in the database are hashed (BCrypt or similar).
 - Introduce a persistent database (PostgreSQL, MySQL) and robust migration strategy.
 - Extend security to adopt industry-standard authentication/authorization (OAuth2, SAML, etc.).
 - Integrate CI/CD pipelines for automated testing, containerization, and smooth rollouts.
 - <TBE> ... </TBE>
-
 
 ---
 🚀 **End of Document**

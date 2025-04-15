@@ -1,0 +1,30 @@
+@startuml
+
+actor User as u
+
+u -> Frontend: create a new task
+Frontend -> Backend: createTask()
+Frontend <- Backend: task response
+u <- Frontend: show new added task
+
+u -> Frontend: get all tasks
+Frontend -> Backend: getAllTasks()
+Frontend <- Backend: tasks response
+u <- Frontend: show all available tasks
+
+u -> Frontend: get a specific task
+Frontend -> Backend: getATask()
+Frontend <- Backend: task response
+u <- Frontend: show requested task
+
+u -> Frontend: update an existing task
+Frontend -> Backend: updateTask()
+Frontend <- Backend: task response
+u <- Frontend: show updated task
+
+u -> Frontend: delete an existing task
+Frontend -> Backend: deleteTask()
+Frontend <-- Backend: response OK
+u <- Frontend: show tasks without the deleted task
+
+@enduml

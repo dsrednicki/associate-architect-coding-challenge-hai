@@ -1,18 +1,11 @@
 package com.signavio.architect.challenge.repository;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 import java.time.OffsetDateTime;
 
 @Entity
-public class TaskEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class TaskEntity extends BaseEntity {
 
     private String name;
 
@@ -21,14 +14,6 @@ public class TaskEntity {
     private OffsetDateTime finished;
 
     private OffsetDateTime created;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

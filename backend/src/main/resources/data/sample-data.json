@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Design Database Schema",
+    "description": "Design and model the database schema for the new project.",
+    "created": "2025-03-18T09:55:18.819Z",
+    "finished": ""
+  },
+  {
+    "name": "Develop REST API",
+    "description": "Implement the REST API endpoints for user management.",
+    "created": "2025-03-19T10:10:00.000Z",
+    "finished": "2025-03-20T14:30:00.000Z"
+  },
+  {
+    "name": "Create Wireframes",
+    "description": "Develop initial wireframes for the landing page.",
+    "created": "2025-03-21T11:15:00.000Z",
+    "finished": ""
+  },
+  {
+    "name": "Implement UI",
+    "description": "Build the user interface using React components.",
+    "created": "2025-03-22T12:20:00.000Z",
+    "finished": "2025-03-23T16:45:00.000Z"
+  },
+  {
+    "name": "Set up CI/CD",
+    "description": "Configure the continuous integration and deployment pipeline.",
+    "created": "2025-03-24T08:30:00.000Z",
+    "finished": ""
+  },
+  {
+    "name": "Write Unit Tests",
+    "description": "Create comprehensive unit tests for all critical modules.",
+    "created": "2025-03-25T09:40:00.000Z",
+    "finished": "2025-03-26T13:00:00.000Z"
+  },
+  {
+    "name": "Conduct Code Review",
+    "description": "Perform a thorough code review and ensure quality standards.",
+    "created": "2025-03-27T10:50:00.000Z",
+    "finished": ""
+  },
+  {
+    "name": "Deploy Application",
+    "description": "Deploy the application to the production environment.",
+    "created": "2025-03-28T11:55:00.000Z",
+    "finished": "2025-03-29T15:15:00.000Z"
+  }
+]

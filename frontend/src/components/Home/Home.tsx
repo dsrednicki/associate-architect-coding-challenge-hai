@@ -14,13 +14,16 @@ const Home: React.FC = () => {
   useEffect(() => {
     const shellbar = shellbarRef.current;
     const actionPopover = popoverRef.current;
-
     const handleProfileClick = (event) => {
+      // @ts-ignore
       actionPopover.opener = event.detail.targetRef;
+      // @ts-ignore
       actionPopover.open = true;
     };
+    // @ts-ignore
     shellbar.addEventListener("ui5-profile-click", handleProfileClick);
     return () => {
+      // @ts-ignore
       shellbar.removeEventListener("ui5-profile-click", handleProfileClick);
     };
   }, []);

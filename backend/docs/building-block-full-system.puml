@@ -1,0 +1,20 @@
+@startuml
+actor User as u
+
+component "Task Manager" as CTM {
+	port API as p.1
+	port Browser as p.2
+
+	component "Frontend Web-App\nReact + SAP UI5" as FE <<Subsystem>>
+	component "Backend API\nSpring boot" as BE <<Subsystem>>
+
+	p.2 ..> FE
+
+	FE ..> () HTTP : use
+	p.1 ..> () HTTP: use
+
+	HTTP -  BE
+}
+
+CTM <-left- u
+@enduml
