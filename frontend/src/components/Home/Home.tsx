@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import './Home.css';
+import { useAuth } from "../../hooks/useAuth";
 import TaskManager from '../TaskManager/TaskManager';
 import "@ui5/webcomponents-fiori/dist/ShellBar.js";
 import "@ui5/webcomponents/dist/Avatar.js";
@@ -10,6 +11,7 @@ import "@ui5/webcomponents/dist/Button.js";
 const Home: React.FC = () => {
   const shellbarRef = useRef(null);
   const popoverRef = useRef(null);
+  const { logout, userInfo } = useAuth();
 
   useEffect(() => {
     const shellbar = shellbarRef.current;
@@ -27,6 +29,10 @@ const Home: React.FC = () => {
       shellbar.removeEventListener("ui5-profile-click", handleProfileClick);
     };
   }, []);
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <div className="App">
@@ -47,10 +53,14 @@ const Home: React.FC = () => {
         </ui5-shellbar>
         <ui5-popover id="action-popover" ref={popoverRef} placement="Bottom">
           <div className="action-popover-header">
-            <ui5-title>Your Name</ui5-title>
+            <ui5-title>{userInfo?.name}</ui5-title>
           </div>
           <div className="action-popover-content">
-          <ui5-button icon="log" slot="startButton">Logout</ui5-button>
+          <ui5-button
+              icon="log"
+              slot="startButton"
+              onClick={handleLogout}
+          >Logout</ui5-button>
           </div>
         </ui5-popover>
       </header>

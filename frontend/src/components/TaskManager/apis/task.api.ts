@@ -4,7 +4,11 @@ const BASE_URL = "http://localhost:8080/api/tasks";
 
 export const taskService = {
     async getAllTasks(): Promise<Task[]> {
-        const response = await fetch(BASE_URL);
+        const response = await fetch(BASE_URL, {
+            method: "GET",
+            headers: {"Content-Type": "application/json"},
+            credentials: "include",
+        });
         if (!response.ok) {
             throw new Error("Failed to fetch tasks");
         }
@@ -14,7 +18,8 @@ export const taskService = {
     async getTask(taskId: number): Promise<Task> {
         const response = await fetch(`${BASE_URL}/${taskId}`, {
             method: "GET",
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json"},
+            credentials: "include",
         });
         if (!response.ok) {
             throw new Error("Failed to fetch tasks");
@@ -27,6 +32,7 @@ export const taskService = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(task),
+            credentials: "include",
         });
         if (!response.ok) {
             throw new Error("Failed to create task");
@@ -39,6 +45,7 @@ export const taskService = {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(task),
+            credentials: "include"
         });
 
         if (!response.ok) {
@@ -52,6 +59,7 @@ export const taskService = {
         const response = await fetch(`${BASE_URL}/${taskId}`, {
             method: "DELETE",
             headers: {"Content-Type": "application/json"},
+            credentials: "include"
         });
 
         if (response.status !== 204) {

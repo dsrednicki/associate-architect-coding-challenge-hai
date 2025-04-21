@@ -56,10 +56,10 @@ const EditTaskDialog: React.FC<EditTaskDialogProps> = (
             onAfterClose={onCancel}
         >
             <form
-                style={{ width: "100%", padding: "1rem", display: "grid", gap: "1rem" }}
+                style={{ width: "100%", display: "grid", gap: "1rem" }}
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <table style={{ width: "100%", padding: "1rem", borderSpacing: "0.5rem" }}>
+                <table style={{ width: "100%", borderSpacing: "0.5rem" }}>
                     <tbody>
                     <tr>
                         <td>

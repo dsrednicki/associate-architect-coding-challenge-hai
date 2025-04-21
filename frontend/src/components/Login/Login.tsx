@@ -3,14 +3,16 @@ import "@ui5/webcomponents/dist/Input.js";
 import "@ui5/webcomponents/dist/Button.js";
 import "@ui5/webcomponents/dist/Label.js";
 import "./Login.css";
+import { useAuth } from "../../hooks/useAuth";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-    console.log("Username:", username, "Password:", password);
+    await login(username, password)
   };
 
   const handleUsernameInput = (e: Event) => {
