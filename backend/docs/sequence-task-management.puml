@@ -2,6 +2,13 @@
 
 actor User as u
 
+u -> Frontend: log into the app
+Frontend -> Backend: login()
+Backend -> Backend: createSession()
+Frontend <- Backend: return cookie session id
+Frontend -> Frontend: redirect to home and load all tasks
+u <- Frontend: show all available tasks
+
 u -> Frontend: create a new task
 Frontend -> Backend: createTask()
 Frontend <- Backend: task response
@@ -26,5 +33,12 @@ u -> Frontend: delete an existing task
 Frontend -> Backend: deleteTask()
 Frontend <-- Backend: response OK
 u <- Frontend: show tasks without the deleted task
+
+u -> Frontend: log out from the app
+Frontend -> Backend: logout()
+Backend -> Backend: invalidateSession()
+Frontend <- Backend: return status ok
+Frontend -> Frontend: remove user info
+u <- Frontend: redirect to login page
 
 @enduml

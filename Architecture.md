@@ -105,22 +105,40 @@ We use React and TypeScript for a modular, component-based approach:
 4. Modularized components
    -  Modularize components, which can be re-used
 
-<TBE> ... </TBE>
-
 ## 5️⃣ Scalability
 - The PoC runs on a single server with an in-memory DB, suitable for demonstration.
-- <TBE> ... </TBE>
+- In future iterations, we could scale horizontally (multiple backend instances)
+  and switch to a durable database (e.g., PostgreSQL).
+- Refactor the application into a more modular and maintainable structure by introducing
+  a Clean Architecture or Hexagonal Architecture => grounded in
+  Domain-Driven Design (DDD) principles, which will help to separate domain boundaries
+  making the system easier to extend.
 
 ## 6️⃣ Security Considerations
-- <TBE> ... </TBE>
+- Basic user/password system with session-based authentication.
+- Passwords stored in the database are hashed (BCrypt).
+- Future expansions might include token-based (JWT), OAuth, or SSO.
+- Permissions & Roles: For now, only a basic "user" role is provided, which may be
+  extended with admin roles or project-based permissions later.
+- Currently, item IDs are exposed publicly. To enhance security and prevent enumeration attacks,
+  universally unique identifiers (UUIDs) should be used instead.
+- The frontend service currently uses client-side rendering, which exposes application
+  logic and increases the attack surface. For enhanced security and better control,
+  it should be either rendered server-side—e.g., using a framework like Remix—or placed behind an API gateway.
 
 ## 7️⃣ Future Improvements
-- Basic user/password system with session-based authentication.
-- Passwords stored in the database are hashed (BCrypt or similar).
-- Introduce a persistent database (PostgreSQL, MySQL) and robust migration strategy.
-- Extend security to adopt industry-standard authentication/authorization (OAuth2, SAML, etc.).
-- Integrate CI/CD pipelines for automated testing, containerization, and smooth rollouts.
-- <TBE> ... </TBE>
+- Non-Functional
+  - Introduce a persistent database (PostgreSQL, MySQL) and robust migration strategy.
+  - Extend security to adopt industry-standard authentication/authorization (OAuth2, SAML, etc.).
+  - Integrate CI/CD pipelines for automated testing, containerization, and smooth rollouts.
+  - Add performance metrics and monitoring, especially once the system grows in user count.
+  - Introduce penetration and load tests
+- Functional:
+  - Introduce pagination of listing pages (e.g., show all Tickets)
+  - Implement advanced collaboration models (e.g., multiple assignees, shared tasks, real-time notifications).
+  - Ticket status should be shown to the user
+  - Introduce a notification bar (toast) for showing errors or any user actions
+  - Introduce an agile board to enhance the user experience by enabling drag-and-drop functionality for managing tickets.
 
 ## 8 CICD related
 Please refer to this document [CICD.md](CICD.md)
