@@ -53,7 +53,7 @@ const Home: React.FC = () => {
         </ui5-shellbar>
         <ui5-popover id="action-popover" ref={popoverRef} placement="Bottom">
           <div className="action-popover-header">
-            <ui5-title>{userInfo?.name}</ui5-title>
+            <ui5-title>{userInfo?.firstName} {userInfo?.lastName}</ui5-title>
           </div>
           <div className="action-popover-content">
           <ui5-button

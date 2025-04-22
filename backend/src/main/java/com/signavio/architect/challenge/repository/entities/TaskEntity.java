@@ -1,10 +1,12 @@
-package com.signavio.architect.challenge.repository;
+package com.signavio.architect.challenge.repository.entities;
 
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 
 @Entity
+@Table(name = "tasks")
 public class TaskEntity extends BaseEntity {
 
     private String name;
@@ -14,6 +16,12 @@ public class TaskEntity extends BaseEntity {
     private OffsetDateTime finished;
 
     private OffsetDateTime created;
+
+    @ManyToOne
+    private UserEntity reporter;
+
+    @ManyToOne
+    private UserEntity assignee;
 
     public String getName() {
         return name;
@@ -45,5 +53,21 @@ public class TaskEntity extends BaseEntity {
 
     public void setCreated(OffsetDateTime created) {
         this.created = created;
+    }
+
+    public UserEntity getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(final UserEntity reporter) {
+        this.reporter = reporter;
+    }
+
+    public UserEntity getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(final UserEntity assignee) {
+        this.assignee = assignee;
     }
 }

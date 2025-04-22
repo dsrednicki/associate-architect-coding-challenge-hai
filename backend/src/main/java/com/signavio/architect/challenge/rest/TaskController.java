@@ -1,16 +1,14 @@
 package com.signavio.architect.challenge.rest;
 
-import com.signavio.architect.challenge.repository.TaskEntity;
+import com.signavio.architect.challenge.repository.entities.TaskEntity;
 import com.signavio.architect.challenge.services.TaskCrudService;
-import com.signavio.architect.challenge.services.TaskGeneratorService;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,8 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Validated
@@ -32,28 +28,27 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class TaskController {
 
     private final TaskCrudService taskService;
-    private final TaskGeneratorService taskGeneratorService;
 
     @Autowired
-    public TaskController(final TaskCrudService taskService, final TaskGeneratorService taskGeneratorService) {
+    public TaskController(final TaskCrudService taskService) {
         this.taskService = taskService;
-        this.taskGeneratorService = taskGeneratorService;
     }
 
     @PostMapping
     public ResponseEntity<TaskDto> createTask(@RequestBody final TaskDto task) {
-        final TaskEntity taskEntity = this.taskService.create(Optional.of(task).map(this::convertToCreateEntity).get());
-        if (Objects.isNull(taskEntity)) {
+        final TaskEntity taskEntity = Optional.of(task).map(this::convertToCreateEntity).get();
+        final Optional<TaskEntity> taskEntityCreatedOpt = this.taskService.create(taskEntity);
+        if (taskEntityCreatedOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
         final URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(taskEntity.getId())
+                .buildAndExpand(taskEntityCreatedOpt.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(this.convertToDto(taskEntity));
+        return ResponseEntity.created(location).body(this.convertToDto(taskEntityCreatedOpt.get()));
     }
 
     @GetMapping
@@ -73,32 +68,20 @@ public class TaskController {
     public ResponseEntity<TaskDto> updateTask(@PathVariable  @Positive final long id, @RequestBody final TaskDto task) {
         final TaskEntity taskEntityToUpdate = Optional.of(task).map(this::convertToEntity).get();
         taskEntityToUpdate.setId(id);
-        final TaskEntity taskEntity = this.taskService.update(taskEntityToUpdate);
-        if (Objects.isNull(taskEntity)) {
+        final Optional<TaskEntity> taskEntityOpt = this.taskService.update(taskEntityToUpdate);
+        if (taskEntityOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        final TaskDto taskDto = this.convertToDto(taskEntity);
+        final TaskDto taskDto = this.convertToDto(taskEntityOpt.get());
         return ResponseEntity.ok(taskDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable @Positive final long id) {
         if (this.taskService.delete(id)) {
-            return ResponseEntity.noContent().build(); // 204 No Content
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
-    }
-
-    @Profile("test")
-    @PostMapping("/add-sample-data")
-    public ResponseEntity<List<Long>> createSampleTasks() {
-        final List<Long> taskIds = this.taskGeneratorService.generateSampleTasks();
-        final URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/tasks")
-                .build()
-                .toUri();
-        return ResponseEntity.created(location).body(taskIds);
     }
 
     private TaskDto convertToDto(final TaskEntity taskEntity) {

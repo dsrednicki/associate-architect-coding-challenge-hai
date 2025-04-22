@@ -2,17 +2,15 @@ package com.signavio.architect.challenge.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,23 +20,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecuritySessionBasedConfig {
 
-    private static final String USERNAME = "testuser";
-    private static final String PASSWORD = "password123";
-    private static final String USER_ROLE = "USER";
+    private static final String[] PUBLIC_URLS = {
+            "/login"
+            , "/logout"
+    };
 
-    private static final String[] PUBLIC_URLS = {"/login", "/logout", "/tasks/add-sample-data"};
-    private static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000");
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-                .username(USERNAME)
-                .password(passwordEncoder().encode(PASSWORD))
-                .roles(USER_ROLE)
-                .build();
+    @Value("#{'${app.cors.allowed-origins}'.split(',')}")
+    private List<String> allowed_origins;
 
-        return new InMemoryUserDetailsManager(user);
-    }
+    @Autowired
+    private DatabaseUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,6 +47,7 @@ public class SecuritySessionBasedConfig {
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated()
                 )
+                .userDetailsService(userDetailsService)
                 .formLogin(form -> form
                         .loginProcessingUrl("/login")
                         .successHandler((request, response, authentication) ->
@@ -77,7 +70,7 @@ public class SecuritySessionBasedConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ALLOWED_ORIGINS);
+        configuration.setAllowedOrigins(allowed_origins);
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

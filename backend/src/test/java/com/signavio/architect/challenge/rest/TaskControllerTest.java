@@ -2,8 +2,10 @@ package com.signavio.architect.challenge.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.signavio.architect.challenge.repository.TaskEntity;
+import com.signavio.architect.challenge.repository.UserRepository;
+import com.signavio.architect.challenge.repository.entities.TaskEntity;
 import com.signavio.architect.challenge.repository.TaskRepository;
+import com.signavio.architect.challenge.services.generators.DefaultUserGeneratorService;
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.ZonedDateTime;
@@ -21,8 +26,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 
 @SpringBootTest
@@ -30,10 +38,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TaskControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebApplicationContext context;
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
 
@@ -41,7 +54,21 @@ class TaskControllerTest {
     void setUp() {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
+
         taskRepository.deleteAll();
+
+        final RequestPostProcessor testUser = testUser();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .defaultRequest(get("/").with(testUser))
+                .defaultRequest(post("/").with(testUser))
+                .defaultRequest(put("/").with(testUser))
+                .defaultRequest(delete("/").with(testUser))
+                .build();
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                DefaultUserGeneratorService.DEFAULT_USERNAME,
+                DefaultUserGeneratorService.DEFAULT_PASSWORD
+        ));
     }
 
     @Test
@@ -144,10 +171,20 @@ class TaskControllerTest {
     @Test
     public void testDeleteATask() throws Exception {
         // GIVEN
-        setupTestData();
+        final MvcResult mvcResult = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                          "name": "test task",
+                          "description": "my task description",
+                          "created": "2025-03-18T09:55:18.819Z",
+                          "finished": ""
+                        }
+                        """)).andExpect(status().isCreated()).andReturn();
+        final long id =  getTaskDto(mvcResult).getId();
 
         // WHEN / THEN
-        mockMvc.perform(delete("/tasks/1")).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/tasks/" + id)).andExpect(status().isNoContent());
     }
 
     private void setupTestData() {
@@ -156,6 +193,7 @@ class TaskControllerTest {
         task1.setDescription("my task description");
         task1.setCreated(ZonedDateTime.parse("2025-03-18T09:55:18.819Z").toOffsetDateTime());
         task1.setFinished(null);
+        task1.setReporter(userRepository.findByUsername(DefaultUserGeneratorService.DEFAULT_USERNAME).get());
         taskRepository.save(task1);
 
         TaskEntity task2 = new TaskEntity();
@@ -163,6 +201,7 @@ class TaskControllerTest {
         task2.setDescription("my task description");
         task2.setCreated(ZonedDateTime.parse("2025-03-18T09:55:18.819Z").toOffsetDateTime());
         task2.setFinished(ZonedDateTime.parse("2025-03-18T09:55:18.819Z").toOffsetDateTime());
+        task2.setReporter(userRepository.findByUsername(DefaultUserGeneratorService.DEFAULT_USERNAME).get());
         taskRepository.save(task2);
 
     }
@@ -170,4 +209,12 @@ class TaskControllerTest {
     private TaskDto getTaskDto(final MvcResult mvcResult) throws IOException {
         return this.objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), TaskDto.class);
     }
+
+    private RequestPostProcessor testUser() {
+        return SecurityMockMvcRequestPostProcessors
+                .user(DefaultUserGeneratorService.DEFAULT_USERNAME)
+                .password(DefaultUserGeneratorService.DEFAULT_PASSWORD)
+                .roles(DefaultUserGeneratorService.DEFAULT_ROLES);
+    }
+
 }

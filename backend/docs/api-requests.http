@@ -52,6 +52,3 @@ Content-Type: application/json
 ### Delete a task
 DELETE http://localhost:8080/api/tasks/{{id}}
 Content-Type: application/json
-
-### Generate task sample data
-POST http://localhost:8080/api/tasks/add-sample-data

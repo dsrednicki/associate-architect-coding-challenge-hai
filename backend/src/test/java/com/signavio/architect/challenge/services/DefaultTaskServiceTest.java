@@ -1,7 +1,8 @@
 package com.signavio.architect.challenge.services;
 
-import com.signavio.architect.challenge.repository.TaskEntity;
+import com.signavio.architect.challenge.repository.entities.TaskEntity;
 import com.signavio.architect.challenge.repository.TaskRepository;
+import com.signavio.architect.challenge.repository.entities.UserEntity;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,26 +14,31 @@ class DefaultTaskServiceTest {
 
     private DefaultTaskService testInstance;
 
-    private TaskRepository repository;
+    private TaskRepository taskRepository;
+    private SessionService sessionService;
 
     @BeforeEach
     void setUp() {
-        this.repository = Mockito.mock(TaskRepository.class);
+        this.taskRepository = Mockito.mock(TaskRepository.class);
+        this.sessionService = Mockito.mock(SessionService.class);
 
-        this.testInstance = new DefaultTaskService(this.repository);
+        this.testInstance = new DefaultTaskService(this.taskRepository, this.sessionService);
     }
 
     @Test
     void given_task_to_create() {
         // GIVEN
         final TaskEntity taskCreated = new TaskEntity();
-        Mockito.when(repository.save(taskCreated)).thenReturn(taskCreated);
+        final UserEntity userCreated = new UserEntity();
+        Mockito.when(taskRepository.save(taskCreated)).thenReturn(taskCreated);
+        Mockito.when(sessionService.getCurrentUser()).thenReturn(Optional.of(userCreated));
 
         // WHEN
-        final TaskEntity result = this.testInstance.create(taskCreated);
+        final Optional<TaskEntity> result = this.testInstance.create(taskCreated);
 
         // THEN
-        assertEquals(taskCreated, result);
+        assertTrue(result.isPresent());
+        assertEquals(taskCreated, result.get());
     }
 
     @Test
@@ -41,7 +47,7 @@ class DefaultTaskServiceTest {
         final Long taskId = 42L;
         final TaskEntity taskCreated = new TaskEntity();
         taskCreated.setId(taskId);
-        Mockito.when(repository.findById(taskId)).thenReturn(Optional.of(taskCreated));
+        Mockito.when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskCreated));
 
         // WHEN
         final Optional<TaskEntity> result = this.testInstance.read(taskId);
@@ -59,7 +65,7 @@ class DefaultTaskServiceTest {
         final TaskEntity taskCreated2 = new TaskEntity();
         taskCreated.setId(taskId);
         taskCreated2.setId(taskId+1L);
-        Mockito.when(repository.findAll()).thenReturn(List.of(taskCreated, taskCreated2));
+        Mockito.doReturn(List.of(taskCreated, taskCreated2)).when(taskRepository).findAll();
 
         // WHEN
         final List<TaskEntity> result = this.testInstance.readAll();
@@ -74,40 +80,41 @@ class DefaultTaskServiceTest {
     void give_task_to_update() {
         // GIVEN
         final TaskEntity taskUpdated = new TaskEntity();
-        Mockito.when(repository.save(taskUpdated)).thenReturn(taskUpdated);
+        Mockito.when(taskRepository.save(taskUpdated)).thenReturn(taskUpdated);
 
         // WHEN
-        final TaskEntity result = this.testInstance.update(taskUpdated);
+        final Optional<TaskEntity> result = this.testInstance.update(taskUpdated);
 
         // THEN
-        assertEquals(taskUpdated, result);
+        assertTrue(result.isPresent());
+        assertEquals(taskUpdated, result.get());
     }
 
     @Test
     void given_task_to_delete() {
         // GIVEN
         final Long taskId = 42L;
-        Mockito.when(repository.existsById(taskId)).thenReturn(true);
+        Mockito.when(taskRepository.existsById(taskId)).thenReturn(true);
 
         // WHEN
         final boolean result = this.testInstance.delete(taskId);
 
         // THEN
         assertTrue(result);
-        Mockito.verify(repository).deleteById(taskId);
+        Mockito.verify(taskRepository).deleteById(taskId);
     }
 
     @Test
     void give_no_task_to_delete() {
         // GIVEN
         final Long taskId = 42L;
-        Mockito.when(repository.existsById(taskId)).thenReturn(false);
+        Mockito.when(taskRepository.existsById(taskId)).thenReturn(false);
 
         // WHEN
         final boolean result = this.testInstance.delete(taskId);
 
         // THEN
         assertFalse(result);
-        Mockito.verify(repository, Mockito.never()).deleteById(taskId);
+        Mockito.verify(taskRepository, Mockito.never()).deleteById(taskId);
     }
 }

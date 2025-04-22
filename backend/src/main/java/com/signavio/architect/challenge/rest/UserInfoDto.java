@@ -3,13 +3,23 @@ package com.signavio.architect.challenge.rest;
 
 public class UserInfoDto {
 
-    private String name;
+    private String firstName;
+    private String lastName;
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getName() {
-        return name;
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
     }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
+    }
+
 }
