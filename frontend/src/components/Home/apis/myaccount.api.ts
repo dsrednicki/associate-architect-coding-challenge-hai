@@ -1,10 +1,10 @@
 import { UserInfo } from "../models/userinfo.model";
 
-const BASE_URL = "http://localhost:8080/api/my-account";
+const API_URL = `${process.env.REACT_APP_API_BASE_URL}/my-account`;
 
 export const myAccountService = {
     async getUserInfo(): Promise<UserInfo> {
-        const response = await fetch(BASE_URL, {
+        const response = await fetch(API_URL, {
             method: "GET",
             headers: {"Content-Type": "application/json"},
             credentials: "include",

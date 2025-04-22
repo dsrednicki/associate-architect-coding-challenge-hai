@@ -1,0 +1,26 @@
+@startuml
+actor User as u
+
+component "Task Manager Ecosystem" as CTME {
+	port Browser as b.1
+
+	component "Ingress\nNginx" as PROXY <<Subsystem>>
+
+	component "Backend" as CAPI {
+    	port API as p.1
+    	component "Backend API\nSpring boot" as BE <<Subsystem>>
+    }
+
+    component "Frontend" as CWA {
+        port HTTP as h.1
+    	component "Frontend\nReact + SAP UI5" as FE <<Subsystem>>
+    }
+
+	PROXY --> h.1
+	CWA --> p.1
+
+}
+u .-> b.1
+b.1 -> PROXY
+
+@enduml

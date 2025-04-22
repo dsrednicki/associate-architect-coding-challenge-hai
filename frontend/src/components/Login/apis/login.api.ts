@@ -1,5 +1,5 @@
-const LOGIN_URL = "http://localhost:8080/api/login";
-const LOGOUT_URL = "http://localhost:8080/api/logout";
+const LOGIN_URL = `${process.env.REACT_APP_API_BASE_URL}/login`;
+const LOGOUT_URL = `${process.env.REACT_APP_API_BASE_URL}/logout`;
 
 export const authService = {
     async login(username: string, password: string): Promise<void> {

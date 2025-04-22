@@ -53,8 +53,9 @@ approach (modular architecture) are viable for future expansions.
      tasks with a single user. 
    - The design can be extended to support a “shared tasks” entity or a many-to-many relationship
      in the future.
-
-<TBE> ... </TBE>
+4. Payment Models
+   - The current MVP scope excludes payment. We leave placeholders in case the product transitions to
+        a paid service.
 
 ## 3️⃣ System Design
 
@@ -71,9 +72,9 @@ We have a Spring Boot application divided into the following 3-layers:
 - Service Layer (business logic, e.g., create/edit tasks, handle authentication)
 - Repository Layer (Data Access Layer, persistence with JPA) 
 
-Furthermore, we have an infrastructure component that can configure the framework
-related modules making it straightforward to spin up and test the app, e.g. configuration
-for the authentication, database, etc.
+Furthermore, we have an infrastructure component that can configure the
+framework-related modules, making it straightforward to spin up and test the app,
+e.g., configuration for the authentication, database, etc.
 
 <TBE> ... </TBE>
 
@@ -121,5 +122,7 @@ We use React and TypeScript for a modular, component-based approach:
 - Integrate CI/CD pipelines for automated testing, containerization, and smooth rollouts.
 - <TBE> ... </TBE>
 
+## 8 CICD related
+Please refer to this document [CICD.md](CICD.md)
 ---
 🚀 **End of Document**

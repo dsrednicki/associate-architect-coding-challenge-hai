@@ -1,10 +1,10 @@
 import { Task } from "../models/task.model"
 
-const BASE_URL = "http://localhost:8080/api/tasks";
+const API_URL = `${process.env.REACT_APP_API_BASE_URL}/tasks`;
 
 export const taskService = {
     async getAllTasks(): Promise<Task[]> {
-        const response = await fetch(BASE_URL, {
+        const response = await fetch(API_URL, {
             method: "GET",
             headers: {"Content-Type": "application/json"},
             credentials: "include",
@@ -16,7 +16,7 @@ export const taskService = {
     },
 
     async getTask(taskId: number): Promise<Task> {
-        const response = await fetch(`${BASE_URL}/${taskId}`, {
+        const response = await fetch(`${API_URL}/${taskId}`, {
             method: "GET",
             headers: {"Content-Type": "application/json"},
             credentials: "include",
@@ -28,7 +28,7 @@ export const taskService = {
     },
 
     async createTask(task: Omit<Task, "id" | "created" | "finished">): Promise<Task> {
-        const response = await fetch(BASE_URL, {
+        const response = await fetch(API_URL, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(task),
@@ -41,7 +41,7 @@ export const taskService = {
     },
 
     async updateTask(task: Task): Promise<Task> {
-        const response = await fetch(`${BASE_URL}/${task.id}`, {
+        const response = await fetch(`${API_URL}/${task.id}`, {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(task),
@@ -56,7 +56,7 @@ export const taskService = {
 
 
     async deleteTask(taskId: number): Promise<void> {
-        const response = await fetch(`${BASE_URL}/${taskId}`, {
+        const response = await fetch(`${API_URL}/${taskId}`, {
             method: "DELETE",
             headers: {"Content-Type": "application/json"},
             credentials: "include"

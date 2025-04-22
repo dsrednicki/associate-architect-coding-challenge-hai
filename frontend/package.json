@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Dominik Srednicki <dominik.jan.srednicki@sap.com>",
+  "homepage": "/webapp",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@testing-library/dom": "^10.4.0",
